@@ -21,7 +21,13 @@ from . import views
 app_name = 'Nutella'
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index'),
+    path('', views.IndexView.as_view(), name='index'),
     path('contact/', views.ContactView.as_view(), name='contact'),
-    path('legals/', views.legals, name='legals'),
+    path('legals/', views.LegalView.as_view(), name='legals'),
+    path('results/', views.results, name='results'),
+    path('login/', views.LoginView.as_view(), name='login'),
+    path('register/', views.register, name='register'),
+    path('logout/', views.logout_view, name='logout'),
+    path('account/', views.AccountView.as_view(), name='account'),
+    path('saved_food/', views.saved_food_view, name='saved_food'),
 ]
