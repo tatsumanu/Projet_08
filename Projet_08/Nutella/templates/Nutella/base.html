@@ -16,8 +16,11 @@
         <link href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic" rel="stylesheet" type="text/css" />
         <!-- Third party plugin CSS-->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet" />
+        <!-- Compiled and minified Materialize CSS & JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
         <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" type="text/css" href="{% static 'Nutella/css/styles.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'Nutella/css/materialize.css' %}">
         <link rel="icon" href="{% static 'Nutella/favicon.png' %}">
     </head>
     <body id="page-top">
@@ -30,13 +33,18 @@
                     <ul class="navbar-nav ml-auto my-2 my-lg-0">
                         <li class="nav-item"><a class="nav-link js-scroll-trigger"><form action="{% url 'Nutella:results' %}" method="POST">{% csrf_token %}{{ search_form }}</form></a></li>
                         {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:account' %}">{{ user.username }}</a></li>
+                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:account' %}">Mon compte</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:saved_food' %}">Mes aliments</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:logout' %}">Déconnexion</a></li>
                         {% else %}
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:login' %}">Se connecter</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:register' %}">Créer un compte</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger {% block menu_active_accueil %}{% endblock %}" href="{% url 'Nutella:index' %}">Accueil</a></li>
+                        {% endif %}
+                        {% if messages %}
+                            {% for message in messages %}
+                            <script>M.toast({html: "{{message}}", classes: 'blue rounded', displayLength:2000});</script>
+                            {% endfor %}
                         {% endif %}
                     </ul>
                 </div>
@@ -63,5 +71,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
         <!-- Core theme JS-->
         <script src="{% static 'Nutella/js/scripts.js' %}"></script>
+        
     </body>
 </html>

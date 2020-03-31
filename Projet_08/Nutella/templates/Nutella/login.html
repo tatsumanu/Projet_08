@@ -8,14 +8,14 @@
         <div class="row h-100 align-items-center justify-content-center text-center">
             <div class="col-lg-10 align-self-end">
                 <h1 class="text-white font-weight-bold">De retour parmi nous?</h1>
-                <p class="text-white-75 font-weight-light mb-5"><a href="{% url 'Nutella:register' %}">Nouvel utilisateur?</a></p>
+                <p class="text-white-75 font-weight-light mb-5"></p><a href="{% url 'Nutella:register' %}">Nouvel utilisateur?</a></p>
                 <hr class="divider my-4" />
             </div>
             <div class="col-lg-8 align-self-baseline">
-                <form action="{% url 'Nutella:login' %}" method="post">
+                <form method="post">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <input type="submit" class="btn btn-primary btn-xl js-scroll-trigger" value="Submit">
+                    <table>{{ form.as_table }}</table>
+                    <input type="submit" class="btn btn-primary btn-md js-scroll-trigger" value="Submit">
                 </form>
             </div>
         </div>

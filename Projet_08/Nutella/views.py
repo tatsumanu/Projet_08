@@ -1,10 +1,10 @@
-from django.shortcuts import render, reverse
-from django.http import HttpResponseRedirect
-from .forms import ContactForm, SearchForm, LoginForm, RegisterForm
+from django.shortcuts import render, reverse, redirect
+from .forms import ContactForm, SearchForm, RegisterForm
 from django.views.generic.edit import FormView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.generic import TemplateView
+from django.contrib.auth.forms import AuthenticationForm
 
 
 # context_processors functions
@@ -34,10 +34,20 @@ def results(request):
     return render(request, template_name)
 
 
-class LoginView(FormView):
-    template_name = 'Nutella/login.html'
-    form_class = LoginForm
-    success_url = '/'
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f"Bienvenue {username}!")
+                return redirect(reverse('Nutella:index',))
+    else:
+        form = AuthenticationForm()
+        return render(request, 'Nutella/login.html', {'form': form})
 
 
 def register(request):
@@ -49,11 +59,11 @@ def register(request):
             username = form.cleaned_data.get('username')
             messages.success(request, f"Bienvenue {username}!")
             login(request, user)
+            return redirect('Nutella:index',)
         else:
             for msg in form.error_messages:
                 messages.error(request, f"{msg}: {form.error_messages[msg]}")
-            print(messages.error)
-        return HttpResponseRedirect(reverse('Nutella:index'))
+            return redirect('Nutella:register',)
     else:
         form = RegisterForm()
         return render(request, template_name, {'form': form})
@@ -61,7 +71,8 @@ def register(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse('Nutella:index',))
+    messages.info(request, f"Vous avez été déconnecté!")
+    return redirect(reverse('Nutella:index',))
 
 
 class AccountView(TemplateView):
