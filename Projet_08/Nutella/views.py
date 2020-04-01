@@ -1,10 +1,12 @@
 from django.shortcuts import render, reverse, redirect
-from .forms import ContactForm, SearchForm, RegisterForm
+from .forms import ContactForm, SearchForm
 from django.views.generic.edit import FormView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.generic import TemplateView
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .admin import UserCreationForm
 
 
 # context_processors functions
@@ -53,19 +55,19 @@ def login_view(request):
 def register(request):
     template_name = 'Nutella/register.html'
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = UserCreationForm(data=request.POST)
         if form.is_valid():
             user = form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f"Bienvenue {username}!")
+            name = form.cleaned_data.get('name')
+            messages.success(request, f"Bienvenue {name}!")
             login(request, user)
             return redirect('Nutella:index',)
         else:
-            for msg in form.error_messages:
-                messages.error(request, f"{msg}: {form.error_messages[msg]}")
+            for elt in form.errors.as_data():
+                messages.info(request, f"{elt}: {form.errors.as_data()[elt]}")
             return redirect('Nutella:register',)
     else:
-        form = RegisterForm()
+        form = UserCreationForm()
         return render(request, template_name, {'form': form})
 
 
@@ -75,9 +77,12 @@ def logout_view(request):
     return redirect(reverse('Nutella:index',))
 
 
-class AccountView(TemplateView):
+class AccountView(LoginRequiredMixin, TemplateView):
+    redirect_field_name = "/account/"
+    login_url = '/login/'
     template_name = 'Nutella/account.html'
 
 
 def saved_food_view(request):
-    pass
+    template_name = 'Nutella/saved_food.html'
+    return render(request, template_name)

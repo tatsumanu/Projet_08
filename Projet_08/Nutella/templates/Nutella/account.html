@@ -7,7 +7,7 @@
     <div class="container h-100">
         <div class="row h-100 align-items-center justify-content-center text-center">
             <div class="col-lg-10 align-self-start">
-                <h1 class="text-white font-weight-bold">Bonjour {{ user.username }}!</h1>
+                <h1 class="text-white font-weight-bold">Bonjour {{ user.name }}!</h1>
             </div>
         </div>
     </div>
@@ -20,8 +20,8 @@
         <div class="row">
             <div class="col-lg-6 col-md-12 text-center"><img src="{% static 'Nutella/assets/img/remy.jpg' %}" alt="Photo de Rémy"></div>
             <div class="col-lg-6 col-md-12 align-self-center text-center">
-                <p>Adresse mail: {{ user.id_email }}</p>
-                <p>Nom d'utilisateur: {{ user.username }}</p>
+                <p>Nom d'utilisateur: <strong>{{ user.name }}</strong></p>
+                <p>Adresse mail: <strong>{{ user.email }}</strong></p>
                 <hr class="divider my-4" />
                 <p><a href="{% url 'Nutella:saved_food' %}">Consulter vos aliments sauvegardés</a></p>
                 <p><a href="{% url 'Nutella:index' %}">Retourner à l'accueil</a></p>
