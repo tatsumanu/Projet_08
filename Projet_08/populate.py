@@ -24,7 +24,6 @@ def fill_db(nb_page, page_size, categories):
     for cat in categories:
         cursor.execute(add_category, (cat,))
 
-
     # main loop iterating through the categories of food given to the script
     cpt = 1
     while cpt <= nb_page:
@@ -35,7 +34,7 @@ def fill_db(nb_page, page_size, categories):
             url = "https://fr.openfoodfacts.org/cgi/search.pl?"
 
             data = ['product_name', 'brands', 'nutrition_grade_fr', 'url',
-                    'stores', 'ingredients_text']
+                    'stores', 'ingredients_text', 'image_small_url', 'image_front_url']
 
             payload = {
                 'tag_0': cat,
@@ -64,6 +63,7 @@ def fill_db(nb_page, page_size, categories):
 
     print("Operations completed successfully in {:02f}\
     seconds!".format((time.time() - t1)))
+
 
 if __name__ == "__main__":
 

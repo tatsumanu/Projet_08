@@ -67,3 +67,25 @@ class MyUser(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=200)
+    brand = models.CharField(max_length=200)
+    nutri_grade = models.CharField(max_length=10)
+    url = models.URLField()
+    stores = models.CharField(max_length=200)
+    ingredients = models.TextField()
+    image_small = models.URLField()
+    image_xl = models.URLField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name

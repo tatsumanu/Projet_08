@@ -14,7 +14,9 @@
         </div>
     </div>
 </header>
-<!-- Results section-->
+
+<!-- Results section if saved products found with this account-->
+{% if products %}
 <section class="page-section" id="services" style="padding: 3rem 0;">
     <div class="container">
         <h2 class="text-center mt-0">Voici les aliments enregistrés lors de vos précédentes visites {{ user.name }}!</h2>
@@ -67,4 +69,21 @@
         </div>
     </div>
 </section>
+
+<!-- Results section if no saved products found with this account-->
+{% else %}
+<section class="page-section" id="user_informations" style="height: 45vh; min-height: 45rem; padding: 3rem 0;">
+    <div class="container">
+        <h2 class="text-center mt-0">Nous n'avons trouvé aucun produit sauvegardé {{ user.name }}!</h2>
+        <hr class="divider my-4" />
+        <div class="row">
+            <div class="col-lg-6 col-md-12 text-center"><img src="{% static 'Nutella/assets/img/remy-6.jpg' %}" alt="Photo de Rémy"></div>
+            <div class="col-lg-6 col-md-12 align-self-center text-center">                        
+                <h3 class="h4 mb-2"><a href="{% url 'Nutella:index' %}">Commencer votre recherche</a></h3>
+                <p class="text-muted mb-0"></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
 {% endblock %}
