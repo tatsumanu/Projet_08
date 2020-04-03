@@ -1,0 +1,37 @@
+{% extends 'Nutella/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Masthead-->
+<header class="masthead" style="height: 15vh; min-height: 10rem;">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center justify-content-center text-center">
+            <div class="col-lg-10 align-self-start">
+                <h1 class="text-white font-weight-bold">{{ product.name }}</h1>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- User informations section-->
+<section class="page-section" id="user_informations" style="height: 45vh; min-height: 45rem; padding: 3rem 0;">
+    <div class="container">
+        <h2 class="text-center mt-0">Voici les informations disponibles sur ce produit</h2>
+        <hr class="divider my-4" />
+        <div class="row">
+            <div class="col-lg-6 col-md-12 text-center"><img src="{{ product.image_xl }}" alt=""></div>
+            <div class="col-lg-6 col-md-12 align-self-center text-center">
+                <p>Non du produit: {{ product.name }}</p>
+                <p>Marque: {{ product.brand }}</p>
+                <p>Nutri score: {{ product.nutri_grade }}</p>
+                <p>Distribué dans les magasins: {{ product.stores }}</p>
+                <p>Lien vers le site OpenFoodfacts: {{ product.url }}</p>
+                <p>Ingrédients: {{ product.ingredients }}</p>
+                <hr class="divider my-4" />
+                <p><a href="{% url 'Nutella:saved_food' %}">Sauvegarder cet aliment</a></p>
+                <p><a href="{% url 'Nutella:index' %}">Retourner au résultat de la recherche</a></p>
+                <p><a href="{% url 'Nutella:index' %}">Retourner à l'accueil</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

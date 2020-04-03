@@ -1,12 +1,14 @@
 from django.shortcuts import render, reverse, redirect
-from .forms import ContactForm, SearchForm
 from django.views.generic.edit import FormView
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+
 from .admin import UserCreationForm
+from .models import Product
+from .forms import ContactForm, SearchForm
 
 
 # context_processors functions
@@ -31,14 +33,26 @@ class ContactView(FormView):
     success_url = 'Nutella/thanks/'
 
 
+def product_view(request, product_id):
+    template_name = 'Nutella/product.html'
+    product = Product.objects.get(pk=product_id)
+    return render(request, template_name, {'product': product})
+
+
 def results(request):
     template_name = 'Nutella/results.html'
-    return render(request, template_name)
+    if request.method == 'POST':
+        form = SearchForm(data=request.POST)
+        if form.is_valid():
+            search_terms = form.cleaned_data.get('search')
+            result = Product.objects.filter(category__name__icontains=search_terms)
+            return render(request, template_name, {'result': result, 'search_terms': search_terms})
 
 
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
+        print(form)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
