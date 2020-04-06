@@ -1,13 +1,14 @@
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.views.generic.edit import FormView
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, ListView, View
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 from .admin import UserCreationForm
-from .models import Product
+from .models import Product, Favorite
 from .forms import ContactForm, SearchForm
 
 
@@ -33,10 +34,34 @@ class ContactView(FormView):
     success_url = 'Nutella/thanks/'
 
 
-def product_view(request, product_id):
+class ProductView(DetailView):
     template_name = 'Nutella/product.html'
-    product = Product.objects.get(pk=product_id)
-    return render(request, template_name, {'product': product})
+    model = Product
+
+
+class AccountView(LoginRequiredMixin, TemplateView):
+    redirect_field_name = "/account/"
+    login_url = '/login/'
+    template_name = 'Nutella/account.html'
+
+
+def saved_food_view(request):
+    template_name = 'Nutella/saved_food.html'
+    favorite = Favorite.objects.filter(user=request.user)
+    return render(request, template_name, {'products': favorite})
+
+
+class AddToFavoriteView(View):
+    def post(self, request, product_id):
+        product = get_object_or_404(Product, pk=product_id)
+        try:
+            new_favorite = Favorite(user=request.user, product=product)
+        except:
+            return render(reverse(request, 'Nutella:results'))
+        else:
+            new_favorite.save()
+            print(new_favorite.product)
+            return HttpResponseRedirect(reverse('Nutella:results'))
 
 
 def results(request):
@@ -45,8 +70,28 @@ def results(request):
         form = SearchForm(data=request.POST)
         if form.is_valid():
             search_terms = form.cleaned_data.get('search')
-            result = Product.objects.filter(category__name__icontains=search_terms)
-            return render(request, template_name, {'result': result, 'search_terms': search_terms})
+            result = Product.objects.filter(
+                category__name__icontains=search_terms)
+            if not result:
+                result = Product.objects.filter(name__icontains=search_terms)
+            request.session['last_search'] = {'search_terms': search_terms}
+            return render(request,
+                          template_name,
+                          {'result': result, 'search_terms': search_terms})
+    else:
+        if 'last_search' in request.session:
+            context = request.session['last_search']
+            search_terms = context['search_terms']
+            result = Product.objects.filter(
+                category__name__icontains=search_terms)
+            if not result:
+                result = Product.objects.filter(name__icontains=search_terms)
+            context['result'] = result
+        else:
+            return HttpResponseRedirect(reverse('Nutella:index'))
+        return render(request,
+                      template_name,
+                      context)
 
 
 def login_view(request):
@@ -89,14 +134,3 @@ def logout_view(request):
     logout(request)
     messages.info(request, f"Vous avez été déconnecté!")
     return redirect(reverse('Nutella:index',))
-
-
-class AccountView(LoginRequiredMixin, TemplateView):
-    redirect_field_name = "/account/"
-    login_url = '/login/'
-    template_name = 'Nutella/account.html'
-
-
-def saved_food_view(request):
-    template_name = 'Nutella/saved_food.html'
-    return render(request, template_name)

@@ -25,9 +25,20 @@
 
                 <div class="col-lg-4 col-md-12 text-center">
                     <div class="mt-5">
-                        <a href="{% url 'Nutella:product' product.id %}"><img src="{{ product.image_small }}" alt="{{ product.image_small }}"></a>
-                        <h3 class="h4 mb-2">{{ product.name }}</h3>
-                        <p class="text-muted mb-0"><a href="#">Sauvegarder</a></p>
+                        <a class="portfolio-box" href="{% url 'Nutella:product' product.id %}">
+                            <img class="img-fluid" src="{{ product.image_small }}" alt="{{ product.image_small }}">
+                        </a>
+                        <div class="portfolio-box-caption">
+                            <h3 class="h4 mb-2">{{ product.name }}</h3>
+                            <p class="text-muted mb-0 ">
+                                
+                                <form action="{% url 'Nutella:add_to_favorite' product.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <i style="font-size:24px; vertical-align: auto;" class="fa">&#xf0c7;</i>
+                                    <input type="submit" class="btn btn-primary-second btn-xs" value="Sauvegarder">
+                                </form>
+                            </p>
+                        </div>
                     </div>
                 </div>
 

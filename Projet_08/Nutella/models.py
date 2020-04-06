@@ -86,6 +86,12 @@ class Product(models.Model):
     image_small = models.URLField()
     image_xl = models.URLField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    #users = models.ManyToManyField(MyUser, related_name='favorites', through=Favorite)
 
     def __str__(self):
         return self.name
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)

@@ -4,6 +4,7 @@ import os
 import time
 import django
 import requests
+from tqdm import tqdm
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Projet_08.settings')
 
@@ -37,16 +38,15 @@ def main():
         'tagtype_1': 'lang',
         'sort_by': 'unique_scans_n',
         'page_size': page_size,
-        'page': nb_page,
         'action': 'process',
-        'json': 1
+        'json': True
     }
 
     # starting point
     t1 = time.time()
 
     # main loop iterating through the categories of food given to the script
-    for category in categories:
+    for category in tqdm(categories):
 
         # inserting categories in category table
         cat = add_category(category)

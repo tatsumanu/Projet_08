@@ -10139,3 +10139,50 @@ header.masthead h1 {
   color: rgba(255, 255, 255, 0.75);
 }
 
+.svg-inline--fa {
+  display: inline-block;
+  font-size: inherit;
+  height: 1em;
+  overflow: visible;
+  vertical-align: middle;
+}
+
+.btn-primary-second {
+  color: black;
+  background-color: white;
+  border-color: white;
+}
+.btn-primary-second:hover {
+  color: white;
+  background-color: #f4623a;
+  border-color: #f4623a;
+}
+.btn-primary-second:focus, .btn-primary.focus {
+  color: #fff;
+  background-color: #f24516;
+  border-color: #ee3e0d;
+  box-shadow: 0 0 0 0.2rem rgba(246, 122, 88, 0.5);
+}
+.btn-primary-second.disabled, .btn-primary-second:disabled {
+  color: #fff;
+  background-color: #f4623a;
+  border-color: #f4623a;
+}
+.btn-primary-second:not(:disabled):not(.disabled):active, .btn-primary-second:not(:disabled):not(.disabled).active, .show > .btn-primary-second.dropdown-toggle {
+  color: #fff;
+  background-color: #ee3e0d;
+  border-color: #e23a0d;
+}
+.btn-primary-second:not(:disabled):not(.disabled):active:focus, .btn-primary-second:not(:disabled):not(.disabled).active:focus, .show > .btn-primary-second.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(246, 122, 88, 0.5);
+}
+.btn-primary-second-s {
+  color: #f4623a;
+  background-color: white;
+  border-color: white;
+}
+.btn-primary-second-s:hover {
+  color: white;
+  background-color: #f4623a;
+  border-color: #f4623a;
+}

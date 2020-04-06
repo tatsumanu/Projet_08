@@ -24,10 +24,13 @@
                 <p>Marque: {{ product.brand }}</p>
                 <p>Nutri score: {{ product.nutri_grade }}</p>
                 <p>Distribué dans les magasins: {{ product.stores }}</p>
-                <p>Lien vers le site OpenFoodfacts: {{ product.url }}</p>
+                <p>Lien vers le site OpenFoodfacts: <a href="{{ product.url }}" style="color: black;">{{ product.url }}</a></p>
                 <p>Ingrédients: {{ product.ingredients }}</p>
                 <hr class="divider my-4" />
-                <p><a href="{% url 'Nutella:saved_food' %}">Sauvegarder cet aliment</a></p>
+                <p><form action="{% url 'Nutella:add_to_favorite' product.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-primary-second-s btn-md js-scroll-trigger" value="Sauvegarder cet aliment">
+                </form></p>
                 <p><a href="{% url 'Nutella:index' %}">Retourner au résultat de la recherche</a></p>
                 <p><a href="{% url 'Nutella:index' %}">Retourner à l'accueil</a></p>
             </div>
