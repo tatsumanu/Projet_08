@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import MyUser, Category, Product, Favorite
+from .models import MyUser, Category, Product
 
 
 # Register your models here.
@@ -93,4 +93,3 @@ admin.site.unregister(Group)
 # Registering the Product and Category models
 admin.site.register(Category)
 admin.site.register(Product)
-admin.site.register(Favorite)

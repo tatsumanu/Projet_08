@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 
 from .admin import UserCreationForm
-from .models import Product, Favorite
+from .models import Product
 from .forms import ContactForm, SearchForm
 
 
@@ -45,22 +45,27 @@ class AccountView(LoginRequiredMixin, TemplateView):
     template_name = 'Nutella/account.html'
 
 
-def saved_food_view(request):
+class SavedFoodView(ListView):
     template_name = 'Nutella/saved_food.html'
-    favorite = Favorite.objects.filter(user=request.user)
-    return render(request, template_name, {'products': favorite})
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        return Product.objects.filter(users=self.request.user)
 
 
 class AddToFavoriteView(View):
+
     def post(self, request, product_id):
         product = get_object_or_404(Product, pk=product_id)
         try:
-            new_favorite = Favorite(user=request.user, product=product)
+            product.users.set((request.user,))
         except:
-            return render(reverse(request, 'Nutella:results'))
+            messages.info(request, "Une erreur s'est produite!")
+            return render(request, 'Nutella/results.html')
         else:
-            new_favorite.save()
-            print(new_favorite.product)
+            product.save()
+            messages.success(request,
+                             "Cet aliment a été ajouté à votre liste!")
             return HttpResponseRedirect(reverse('Nutella:results'))
 
 
@@ -94,10 +99,10 @@ def results(request):
                       context)
 
 
-def login_view(request):
-    if request.method == 'POST':
+class LoginView(View):
+
+    def post(self, request):
         form = AuthenticationForm(request, data=request.POST)
-        print(form)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -106,7 +111,8 @@ def login_view(request):
                 login(request, user)
                 messages.success(request, f"Bienvenue {username}!")
                 return redirect(reverse('Nutella:index',))
-    else:
+
+    def get(self, request):
         form = AuthenticationForm()
         return render(request, 'Nutella/login.html', {'form': form})
 
@@ -130,7 +136,9 @@ def register(request):
         return render(request, template_name, {'form': form})
 
 
-def logout_view(request):
-    logout(request)
-    messages.info(request, f"Vous avez été déconnecté!")
-    return redirect(reverse('Nutella:index',))
+class LogoutView(View):
+
+    def get(self, request):
+        logout(request)
+        messages.info(request, "Vous avez été déconnecté!")
+        return redirect(reverse('Nutella:index',))
