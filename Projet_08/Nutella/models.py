@@ -70,6 +70,9 @@ class MyUser(AbstractBaseUser):
 
 
 class Category(models.Model):
+    """
+    Creates categories for our food products.
+    """
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
@@ -77,6 +80,10 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    """
+    Creates products objects for each food collected and inserted in
+    our database.
+    """
     name = models.CharField(max_length=200)
     brand = models.CharField(max_length=200)
     nutri_grade = models.CharField(max_length=10)

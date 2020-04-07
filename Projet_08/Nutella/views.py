@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator
 
 from .admin import UserCreationForm
 from .models import Product
@@ -20,48 +21,82 @@ def navbar_search_form(request):
 
 # Create your views here.
 class IndexView(FormView):
+    """
+    Simple homepage view for the website.
+    Contains a form to search for food products.
+    """
     form_class = SearchForm
     template_name = 'Nutella/index.html'
 
 
 class LegalView(TemplateView):
+    """
+    This view displays legal content for this
+     website.
+    """
     template_name = 'Nutella/legals.html'
 
 
 class ContactView(FormView):
+    """
+    A view to display contact form.
+    Currently not working in this version.
+    """
     template_name = 'Nutella/contact.html'
     form_class = ContactForm
     success_url = 'Nutella/thanks/'
 
 
 class ProductView(DetailView):
+    """
+    Displays details about a product.
+    Needs a product_id to be sent in request.
+    """
     template_name = 'Nutella/product.html'
     model = Product
 
 
 class AccountView(LoginRequiredMixin, TemplateView):
+    """
+    This view displays informantions for an account:
+    if you're registered and logged in, you can access this page.
+    """
     redirect_field_name = "/account/"
     login_url = '/login/'
     template_name = 'Nutella/account.html'
 
 
 class SavedFoodView(ListView):
+    """
+    Displays all the food products already saved by the logged in
+     user. If not any, displays an alternative page.
+    """
+    paginate_by = 6
     template_name = 'Nutella/saved_food.html'
     context_object_name = 'products'
 
     def get_queryset(self):
+        "This is where we try to retrieve already saved products."
         return Product.objects.filter(users=self.request.user)
 
 
 class AddToFavoriteView(View):
+    """
+    Creates a relation between an existing product and an
+     identified user.
+    """
 
     def post(self, request, product_id):
+        """
+        No GET method here. Only POST. To prevent XSS. Try to add
+         a new relation in the users(favorites) product field. Display
+         a message if success or not.
+        """
         product = get_object_or_404(Product, pk=product_id)
         try:
             product.users.set((request.user,))
-        except:
+        except KeyError:
             messages.info(request, "Une erreur s'est produite!")
-            return render(request, 'Nutella/results.html')
         else:
             product.save()
             messages.success(request,
@@ -69,9 +104,42 @@ class AddToFavoriteView(View):
             return HttpResponseRedirect(reverse('Nutella:results'))
 
 
-def results(request):
+class DeleteView(View):
+    """
+    Removes selected relation between identified user and an already
+     saved product.
+    """
+
+    def get(self, request, product_id):
+        """
+        Handles the product_id given by the request to try to remove
+         existing relation between the user and this product.
+        Displays message for success or not.
+        """
+        product = get_object_or_404(Product, pk=product_id)
+        try:
+            product.users.remove(request.user)
+        except KeyError:
+            messages.info(request, "Une erreur s'est produite!")
+        else:
+            product.save()
+            messages.success(request, "Aliment effacé!")
+            return redirect(reverse('Nutella:saved_food'))
+
+
+class ResultsView(ListView):
+    """
+    Displays the products found with the search terms of the user.
+    """
     template_name = 'Nutella/results.html'
-    if request.method == 'POST':
+    context_object_name = 'products'
+
+    def post(self, request):
+        """
+        Handles the research made by the user, through the category and
+         product references. This is where we go when submitting a search
+         in the dedicated form.
+        """
         form = SearchForm(data=request.POST)
         if form.is_valid():
             search_terms = form.cleaned_data.get('search')
@@ -80,10 +148,22 @@ def results(request):
             if not result:
                 result = Product.objects.filter(name__icontains=search_terms)
             request.session['last_search'] = {'search_terms': search_terms}
+            paginator = Paginator(result, 6)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
             return render(request,
-                          template_name,
-                          {'result': result, 'search_terms': search_terms})
-    else:
+                          self.template_name,
+                          {'products': result,
+                           'search_terms': search_terms,
+                           'page_obj': page_obj})
+
+    def get(self, request):
+        """
+        This side handles the return to the result page after saving a
+         product or viewing informations about a specific food product.
+        This is possible by saving search_term's informations in the
+         session object;
+        """
         if 'last_search' in request.session:
             context = request.session['last_search']
             search_terms = context['search_terms']
@@ -91,17 +171,28 @@ def results(request):
                 category__name__icontains=search_terms)
             if not result:
                 result = Product.objects.filter(name__icontains=search_terms)
-            context['result'] = result
+            context['products'] = result
         else:
             return HttpResponseRedirect(reverse('Nutella:index'))
+        paginator = Paginator(result, 6)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
         return render(request,
-                      template_name,
+                      self.template_name,
                       context)
 
 
 class LoginView(View):
+    """
+    Displays form to log in.
+    """
 
     def post(self, request):
+        """
+        When submitting informations via the form, this method is called
+         and handles the login process.
+        """
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
@@ -113,13 +204,23 @@ class LoginView(View):
                 return redirect(reverse('Nutella:index',))
 
     def get(self, request):
+        """
+        Simply displays the form when calling the webpage.
+        """
         form = AuthenticationForm()
         return render(request, 'Nutella/login.html', {'form': form})
 
 
-def register(request):
-    template_name = 'Nutella/register.html'
-    if request.method == 'POST':
+class RegisterView(View):
+    """
+    A view that handle the creation of a new user.
+    """
+
+    def post(self, request):
+        """
+        Handles the case information is passed through the form to the
+         webserver.
+        """
         form = UserCreationForm(data=request.POST)
         if form.is_valid():
             user = form.save()
@@ -131,12 +232,21 @@ def register(request):
             for elt in form.errors.as_data():
                 messages.info(request, f"{elt}: {form.errors.as_data()[elt]}")
             return redirect('Nutella:register',)
-    else:
+
+    def get(self, request):
+        """
+        Displays the webpage with the form when trying to access the page
+         for the first time.
+        """
+        template_name = 'Nutella/register.html'
         form = UserCreationForm()
         return render(request, template_name, {'form': form})
 
 
 class LogoutView(View):
+    """
+    View function to simply log out the user. Displays also a message.
+    """
 
     def get(self, request):
         logout(request)
