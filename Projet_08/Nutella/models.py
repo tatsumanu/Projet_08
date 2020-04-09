@@ -36,11 +36,11 @@ class MyUserManager(BaseUserManager):
 
 class MyUser(AbstractBaseUser):
     email = models.EmailField(
-        verbose_name='email address',
+        verbose_name='adresse mail',
         max_length=255,
         unique=True,
     )
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name='pseudo')
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 

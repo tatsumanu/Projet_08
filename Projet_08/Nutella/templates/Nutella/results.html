@@ -27,13 +27,17 @@
 
                 {% for product in page_obj %}
 
-                    <div class="col-lg-4 col-md-12 text-center">
+                    <div class="col-lg-4 col-md-12 text-center align-self-end">
                         <div class="mt-5">
                             <a class="portfolio-box" href="{% url 'Nutella:product' product.id %}">
                                 <img class="img-fluid" src="{{ product.image_small }}" alt="{{ product.image_small }}">
                             </a>
                             <div class="portfolio-box-caption">
                                 <h3 class="h4 mb-2">{{ product.name }}</h3>
+
+                                <!-- If user unidentified, don't show the save button-->
+                                {% if user.name is not None %}
+
                                 <p class="text-muted mb-0 ">
                                     
                                     <form action="{% url 'Nutella:add_to_favorite' product.id %}" method="POST">
@@ -42,6 +46,13 @@
                                         <input type="submit" class="btn btn-primary-second btn-xs" value="Sauvegarder">
                                     </form>
                                 </p>
+
+                                {% else %}
+                                <p>
+                                    <a href="{% url 'Nutella:product' product.id %}">Voir ce produit</a>
+                                </p>
+                                {% endif %}
+
                             </div>
                         </div>
                     </div>
@@ -49,11 +60,11 @@
                 {% endfor %}
 
                 </div>
-                <div class="pagination">
+                <div class="pagination mt-5" style="justify-content: center;">
                     <span class="step-links">
                         {% if page_obj.has_previous %}
-                            <a href="?page=1">&laquo; first</a>
-                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                            <a href="?page=1">&laquo; Page 1</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">Page précédente</a>
                         {% endif %}
                 
                         <span class="current">
@@ -61,8 +72,8 @@
                         </span>
                 
                         {% if page_obj.has_next %}
-                            <a href="?page={{ page_obj.next_page_number }}">next</a>
-                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                            <a href="?page={{ page_obj.next_page_number }}">page suivante</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">Dernière page &raquo;</a>
                         {% endif %}
                     </span>
                 </div>

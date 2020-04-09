@@ -12,27 +12,53 @@
         </div>
     </div>
 </header>
+
 <!-- User informations section-->
 <section class="page-section" id="user_informations" style="height: 45vh; min-height: 45rem; padding: 3rem 0;">
     <div class="container">
         <h2 class="text-center mt-0">Voici les informations disponibles sur ce produit</h2>
         <hr class="divider my-4" />
         <div class="row">
-            <div class="col-lg-6 col-md-12 text-center"><img src="{{ product.image_xl }}" alt=""></div>
+            <div class="col-lg-6 col-md-12 text-center">
+
+                <!-- Display the right nutriscore image-->
+                {% if product.nutri_grade == 'a' %}
+                    <img src="{% static 'Nutella/assets/img/nutriscore-a.svg' %}">
+                {% elif product.nutri_grade == 'b' %}
+                    <img src="{% static 'Nutella/assets/img/nutriscore-b.svg' %}">
+                {% elif product.nutri_grade == 'c' %}
+                    <img src="{% static 'Nutella/assets/img/nutriscore-c.svg' %}">
+                {% elif product.nutri_grade == 'd' %}
+                    <img src="{% static 'Nutella/assets/img/nutriscore-d.svg' %}">
+                {% else %}
+                    <img src="{% static 'Nutella/assets/img/nutriscore-e.svg' %}">
+                {% endif %}
+                <img src="{{ product.image_xl }}" alt="{{ product.name }}">
+            </div>
+
             <div class="col-lg-6 col-md-12 align-self-center text-center">
-                <p>Non du produit: {{ product.name }}</p>
-                <p>Marque: {{ product.brand }}</p>
-                <p>Nutri score: {{ product.nutri_grade }}</p>
-                <p>Distribué dans les magasins: {{ product.stores }}</p>
-                <p>Lien vers le site OpenFoodfacts: <a href="{{ product.url }}" style="color: black;">{{ product.url }}</a></p>
-                <p>Ingrédients: {{ product.ingredients }}</p>
+                <p><strong>Marque:</strong> {{ product.brand }}</p>
+                <p><strong>Nutri score:</strong> {{ product.nutri_grade }}</p>
+                <p><strong>Distribué dans les magasins:</strong> {{ product.stores }}</p>
+                <p><strong>Ingrédients:</strong> {{ product.ingredients }}</p>
+                <p><strong>Lien vers le site OpenFoodfacts:</strong> <a href="{{ product.url }}" style="color: black;">{{ product.url }}</a></p>
                 <hr class="divider my-4" />
-                <p><form action="{% url 'Nutella:add_to_favorite' product.id %}" method="POST">
-                    {% csrf_token %}
-                    <input type="submit" class="btn btn-primary-second-s btn-md js-scroll-trigger" value="Sauvegarder cet aliment">
-                </form></p>
-                <p><a href="{% url 'Nutella:index' %}">Retourner au résultat de la recherche</a></p>
+                
+                <!-- If user unidentified, don't show the save button-->
+                {% if user.name is not None %}
+                    <p><form action="{% url 'Nutella:add_to_favorite' product.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-primary-second-s btn-md js-scroll-trigger" value="Sauvegarder cet aliment">
+                    </form></p>
+                {% else %}
+                    <p>
+                        <a href="{% url 'Nutella:login' %}">Se connecter pour commencer à sauvegarder des aliments!</a>
+                    </p>
+                {% endif %}
+
+                <p><a href="{% url 'Nutella:results' %}">Retourner au résultat de la recherche</a></p>
                 <p><a href="{% url 'Nutella:index' %}">Retourner à l'accueil</a></p>
+
             </div>
         </div>
     </div>

@@ -90,18 +90,24 @@ class AddToFavoriteView(View):
         """
         No GET method here. Only POST. To prevent XSS. Try to add
          a new relation in the users(favorites) product field. Display
-         a message if success or not.
+         a message if success or not. Can also manage cases when the
+         selected product is already saved.
         """
         product = get_object_or_404(Product, pk=product_id)
-        try:
-            product.users.set((request.user,))
-        except KeyError:
-            messages.info(request, "Une erreur s'est produite!")
+        if request.user in product.users.all():
+            messages.info(request, "Cet aliment est déjà dans vos favoris!")
         else:
-            product.save()
-            messages.success(request,
-                             "Cet aliment a été ajouté à votre liste!")
-            return HttpResponseRedirect(reverse('Nutella:results'))
+            try:
+                product.users.set((request.user,))
+            except KeyError:
+                messages.info(request, "Une erreur s'est produite!")
+            else:
+                product.save()
+                messages.success(
+                    request,
+                    "Cet aliment a été ajouté à votre liste!"
+                    )
+        return HttpResponseRedirect(reverse('Nutella:results'))
 
 
 class DeleteView(View):
