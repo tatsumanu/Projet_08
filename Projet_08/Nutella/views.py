@@ -162,6 +162,8 @@ class ResultsView(ListView):
                           {'products': result,
                            'search_terms': search_terms,
                            'page_obj': page_obj})
+        else:
+            return render(request, self.template_name)
 
     def get(self, request):
         """
