@@ -53,11 +53,12 @@ class PopulateDb:
     def __init__(self, categories, nb_products):
         self.categories = categories
         self.nb_products = nb_products
+        self.double = None
 
     def run(self):
 
         """ Main loop iterating through the categories of food given
-         to the command. """
+         to the command or from the default list. """
 
         # starting point
         t1 = time.time()
@@ -66,6 +67,7 @@ class PopulateDb:
         for category in self.categories:
             # inserting categories in category table
             cat = self.add_category(category)
+            self.double = []
 
             payload = {
                 'tag_0': category,
@@ -111,10 +113,16 @@ class PopulateDb:
             return False
 
     def cleaned_data(self, product):
-        for item in product:
-            item = item.replace('_', '')
-            item = item.strip()
+        a = product['ingredients_text']
+        a = a.replace('_', '').strip()
+        product['ingredients_text'] = a
         return product
+
+    """ def check_double(self, product):
+        if product['product_name'] not in self.double:
+            self.double.append(product['product_name'])
+        else:
+            return False """
 
     def add_category(self, name):
         try:

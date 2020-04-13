@@ -32,7 +32,12 @@
                         </a>
                         <div class="portfolio-box-caption">
                             <h3 class="h4 mb-2">{{ product.name }}</h3>
-                            <p class="text-muted mb-0 "><a href="{% url 'Nutella:delete' product.id %}"> Supprimer de ma liste</a></p>
+                            <p class="text-muted mb-0 ">  
+                                <form action="{% url 'Nutella:delete' product.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" class="btn btn-primary-second btn-xs" value="Supprimer de ma liste">
+                                </form>
+                            </p>
                         </div>
                     </div>
                 </div>

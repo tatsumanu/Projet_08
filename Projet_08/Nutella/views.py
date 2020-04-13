@@ -1,5 +1,5 @@
 from django.shortcuts import render, reverse, redirect, get_object_or_404
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, BaseFormView
 from django.views.generic import TemplateView, DetailView, ListView, View
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -116,9 +116,9 @@ class DeleteView(View):
      saved product.
     """
 
-    def get(self, request, product_id):
+    def post(self, request, product_id):
         """
-        Handles the product_id given by the request to try to remove
+        Handles the product_id given by the request and try to remove
          existing relation between the user and this product.
         Displays message for success or not.
         """
@@ -129,23 +129,52 @@ class DeleteView(View):
             messages.info(request, "Une erreur s'est produite!")
         else:
             product.save()
-            messages.success(request, "Aliment effacé!")
+            messages.success(request, "Aliment supprimé de votre liste!")
             return redirect(reverse('Nutella:saved_food'))
 
 
-class ResultsView(ListView):
+class ResultsView(ListView, BaseFormView):
     """
     Displays the products found with the search terms of the user.
     """
+
+    template_name = 'Nutella/results.html'
+    context_object_name = 'products'
+    paginate_by = 6
+    form_class = SearchForm
+
+    def get_queryset(self):
+        """
+        Look for better food products in our database. Also save the
+         results of it by saving search_term's informations and results
+         in the session object.
+        """
+        context = self.request.session['last_search']
+        search_terms = context['search_terms']
+        result = Product.objects.filter(
+            category__name__icontains=search_terms)
+        if not result:
+            result = Product.objects.filter(name__icontains=search_terms)
+        return result.order_by('nutri_grade')
+
+    def form_valid(self, form):
+        """
+        Handles the research made by the user, through the category and
+         product references.
+        """
+        search_terms = form.cleaned_data.get('search')
+        self.request.session['last_search'] = {'search_terms': search_terms}
+        self.request.session['search_terms'] = search_terms
+        return self.get(self.request)
+
+
+class ResultsView2(ListView):
+
     template_name = 'Nutella/results.html'
     context_object_name = 'products'
 
     def post(self, request):
-        """
-        Handles the research made by the user, through the category and
-         product references. This is where we go when submitting a search
-         in the dedicated form.
-        """
+
         form = SearchForm(data=request.POST)
         if form.is_valid():
             search_terms = form.cleaned_data.get('search')
@@ -153,6 +182,7 @@ class ResultsView(ListView):
                 category__name__icontains=search_terms)
             if not result:
                 result = Product.objects.filter(name__icontains=search_terms)
+            result = result.order_by('pk')
             request.session['last_search'] = {'search_terms': search_terms}
             paginator = Paginator(result, 6)
             page_number = request.GET.get('page')
@@ -166,12 +196,7 @@ class ResultsView(ListView):
             return render(request, self.template_name)
 
     def get(self, request):
-        """
-        This side handles the return to the result page after saving a
-         product or viewing informations about a specific food product.
-        This is possible by saving search_term's informations in the
-         session object;
-        """
+
         if 'last_search' in request.session:
             context = request.session['last_search']
             search_terms = context['search_terms']
@@ -182,6 +207,7 @@ class ResultsView(ListView):
             context['products'] = result
         else:
             return HttpResponseRedirect(reverse('Nutella:index'))
+        result = result.order_by('pk')
         paginator = Paginator(result, 6)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -210,6 +236,12 @@ class LoginView(View):
                 login(request, user)
                 messages.success(request, f"Bienvenue {username}!")
                 return redirect(reverse('Nutella:index',))
+            else:
+                form = AuthenticationForm()
+        else:
+            form = AuthenticationForm()
+        messages.info(request, 'Une erreur est survenue. Veuillez réessayer!')
+        return render(request, 'Nutella/login.html', {'form': form})
 
     def get(self, request):
         """
@@ -253,7 +285,7 @@ class RegisterView(View):
 
 class LogoutView(View):
     """
-    View function to simply log out the user. Displays also a message.
+    Class based view to simply log out the user. Displays also a message.
     """
 
     def get(self, request):
