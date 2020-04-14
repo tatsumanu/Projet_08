@@ -97,3 +97,13 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_better_food(self, product):
+        """
+        Method required to look for better food in the database.
+        It is based on the category of the product given by the
+         user of the website.
+        """
+        category = product.category
+        result = Product.objects.filter(category=category)
+        return result.order_by('nutri_grade')

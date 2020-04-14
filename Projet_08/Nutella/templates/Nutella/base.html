@@ -35,9 +35,9 @@
                     <ul class="navbar-nav ml-auto my-2 my-lg-0">
                         <li class="nav-item"><a class="nav-link js-scroll-trigger"><form action="{% url 'Nutella:results' %}" method="POST">{% csrf_token %}{{ search_form }}</form></a></li>
                         {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:account' %}"><i class='far fa-user' style='font-size:24px' title="Mon compte"></i></a></li>
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:saved_food' %}">Mes aliments</a></li>
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:logout' %}">Déconnexion</i></a></li>
+                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:account' %}"><i class='far fa-user' style='font-size:24px;' title="Mon compte"></i></a></li>
+                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:saved_food' %}"><i class="fas fa-carrot" style="font-size: 24px;" title="Mes aliments"></i></a></li>
+                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:logout' %}"><i class="fas fa-sign-out-alt" style="font-size: 24px;" title="Déconnexion"></i></a></li>
                         {% else %}
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:login' %}">Se connecter</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:register' %}">Créer un compte</a></li>

@@ -107,12 +107,20 @@ class PopulateDb:
  seconds!""".format((time.time() - t1)))
 
     def check_fields(self, product):
+        """
+        Return True if the data contains all the fields required for
+         each product.
+        """
         if all(product.get(i, None) for i in self.data):
             return True
         else:
             return False
 
     def cleaned_data(self, product):
+        """
+        Check field 'ingredients_text' of the product and remove all
+         the undesired stuff.
+        """
         a = product['ingredients_text']
         a = a.replace('_', '').strip()
         product['ingredients_text'] = a
@@ -125,6 +133,9 @@ class PopulateDb:
             return False """
 
     def add_category(self, name):
+        """
+        Add a category to the Category model.
+        """
         try:
             c = Category.objects.create(name=name)
         except IntegrityError:

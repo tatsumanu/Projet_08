@@ -61,7 +61,6 @@ class AccountView(LoginRequiredMixin, TemplateView):
     This view displays informantions for an account:
     if you're registered and logged in, you can access this page.
     """
-    redirect_field_name = "/account/"
     login_url = '/login/'
     template_name = 'Nutella/account.html'
 
@@ -136,6 +135,9 @@ class DeleteView(View):
 class ResultsView(ListView, BaseFormView):
     """
     Displays the products found with the search terms of the user.
+    Look for better food products in our database. Also save the
+    results of it by saving search_term's informations and results
+    in the session object.
     """
 
     template_name = 'Nutella/results.html'
@@ -144,24 +146,23 @@ class ResultsView(ListView, BaseFormView):
     form_class = SearchForm
 
     def get_queryset(self):
-        """
-        Look for better food products in our database. Also save the
-         results of it by saving search_term's informations and results
-         in the session object.
-        """
+
         context = self.request.session['last_search']
         search_terms = context['search_terms']
-        result = Product.objects.filter(
-            category__name__icontains=search_terms)
-        if not result:
-            result = Product.objects.filter(name__icontains=search_terms)
-        return result.order_by('nutri_grade')
+        result = self.search_product(search_terms)
+        return result
+
+    def search_product(self, search):
+
+        products = Product.objects.filter(name__icontains=search)
+        if products:
+            product = products.first()
+            return product.get_better_food(product).all()
+        else:
+            return []
 
     def form_valid(self, form):
-        """
-        Handles the research made by the user, through the category and
-         product references.
-        """
+
         search_terms = form.cleaned_data.get('search')
         self.request.session['last_search'] = {'search_terms': search_terms}
         self.request.session['search_terms'] = search_terms
@@ -169,7 +170,7 @@ class ResultsView(ListView, BaseFormView):
 
 
 class ResultsView2(ListView):
-
+    # to be deleted ...
     template_name = 'Nutella/results.html'
     context_object_name = 'products'
 
