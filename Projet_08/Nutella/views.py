@@ -65,11 +65,12 @@ class AccountView(LoginRequiredMixin, TemplateView):
     template_name = 'Nutella/account.html'
 
 
-class SavedFoodView(ListView):
+class SavedFoodView(LoginRequiredMixin, ListView):
     """
     Displays all the food products already saved by the logged in
      user. If not any, displays an alternative page.
     """
+    login_url = '/login/'
     paginate_by = 6
     template_name = 'Nutella/saved_food.html'
     context_object_name = 'products'
@@ -165,7 +166,6 @@ class ResultsView(ListView, BaseFormView):
 
         search_terms = form.cleaned_data.get('search')
         self.request.session['last_search'] = {'search_terms': search_terms}
-        self.request.session['search_terms'] = search_terms
         return self.get(self.request)
 
 

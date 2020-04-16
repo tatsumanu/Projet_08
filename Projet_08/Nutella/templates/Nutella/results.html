@@ -9,7 +9,7 @@
     <div class="container h-100">
         <div class="row h-100 align-items-center justify-content-center text-center">
             <div class="col-lg-10 align-self-start">
-                <h1 class="text-white font-weight-bold">{{ session.search_terms }}</h1>
+                <h1 class="text-white font-weight-bold">{{ last_search }}</h1>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@
 
 {% if products %}
 
-    <section class="page-section" id="services" style="padding: 3rem 0;">
+    <section class="page-section" id="services" style="padding: 3rem 0; min-height: 45rem;">
         <div class="container">
             <h2 class="text-center mt-0">Vous pouvez remplacer cet aliment par ...</h2>
             <hr class="divider my-4" />
@@ -45,7 +45,7 @@
                                     <img src="{% static 'Nutella/assets/img/nutri-e.png' %}" style="vertical-align: top;">
                                 {% endif %}
                                 
-                                <img class="img-fluid" src="{{ product.image_small }}" alt="{{ product.image_small }}" title="{{ product.name }}">
+                                <img class="img" src="{{ product.image_small }}" alt="{{ product.image_small }}" title="{{ product.name }}">
                             </a>
                             <div class="portfolio-box-caption">
                                 <h3 class="h4 mb-2">{{ product.name }}</h3>

@@ -11,10 +11,10 @@
                 <hr class="divider my-4" />
             </div>
             <div class="col-lg-8 align-self-baseline">
-                <form method="post">
+                <form method="post" style="display: inline-table;">
                     {% csrf_token %}
                     <table>{{ form.as_table }}</table>
-                    <input type="submit" class="btn btn-primary btn-md js-scroll-trigger" value="Submit">
+                    <input type="submit" class="btn btn-primary btn-md js-scroll-trigger" value="Submit" style="margin-top: 1rem;">
                 </form>
             </div>
         </div>
