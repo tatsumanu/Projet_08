@@ -4,7 +4,7 @@ from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from .models import MyUser, Product, Category
 from .views import AccountView, ResultsView, SavedFoodView, AddToFavoriteView
-from.views import LegalView, IndexView, ContactView, LoginView, ProductView
+from.views import LegalView, IndexView, ContactView, LoginView
 from.views import RegisterView, DeleteView, LogoutView
 
 
@@ -164,6 +164,18 @@ class ResultsViewTest(TestCase):
             name='john',
             password='johndoe')
 
+    def create_conditions_for_test(self):
+        category = Category.objects.create(
+            name='test_category'
+        )
+        product = Product.objects.create(
+            name='test_name',
+            brand='test_brand',
+            nutri_grade='a',
+            category=category
+        )
+        return product
+
     def test_can_access_results_view_with_post_method(self):
         response = self.client.post('/results/', {'search': 'search_terms'})
         self.assertEqual(response.status_code, 200)
@@ -183,8 +195,16 @@ class ResultsViewTest(TestCase):
         self.assertEqual(response.resolver_match.func.__name__,
                          ResultsView.as_view().__name__)
 
-    def test_search_product_method(self):
-        pass
+    def test_search_product_method_with_existing_products(self):
+        product = self.create_conditions_for_test()
+        result_view = ResultsView()
+        result = result_view.search_product('test')
+        self.assertEqual(product, [x for x in result][0])
+
+    def test_search_product_method_with_zero_product(self):
+        result_view = ResultsView()
+        result = result_view.search_product('test')
+        self.assertEqual([], result)
 
 
 class ProductViewTest(TestCase):
@@ -236,28 +256,22 @@ class LoginViewTest(TestCase):
         self.assertEqual(response.resolver_match.func.__name__,
                          LoginView.as_view().__name__)
 
-    def test_can_access_login_view(self):
+    def test_can_access_login_view_with_get_method(self):
         response = self.client.get('/login/')
         self.assertEqual(response.status_code, 200)
 
-    def test_can_log_in_with_correct_values(self):
+    def test_log_in_with_correct_values_and_get_redirected(self):
         response = self.client.post(
             '/login/',
-            {'name': 'john@doe.com', 'password': 'johndoe'})
-        self.assertEqual(response.status_code, 200)
+            {'username': 'john@doe.com', 'password': 'johndoe'})
+        self.assertEqual(response.status_code, 302)
 
-    def test_cannot_log_in_with_incorrect_data(self): # à vérifier
-        self.client.post(
+    def test_cannot_log_in_with_incorrect_data_and_post_method(self):
+        response = self.client.post(
             '/login/',
-            {'name': 'joe_test', 'password': ''}
+            {'username': 'joe_test', 'password': ''}
         )
-        self.assertEqual(request.user, None)
-
-    def test_get_redirected_to_home_page_when_logged_in(self): # à vérifier
-        response = self.client.post(
-            '/login/',
-            {'name': 'john@doe.com', 'password': 'johndoe'})
-        self.assertEqual(response.url, '/')
+        self.assertEqual(response.status_code, 200)
 
 
 class DeleteViewTest(TestCase):
@@ -292,7 +306,7 @@ class DeleteViewTest(TestCase):
         ))
         self.assertEqual(response.status_code, 404)
 
-    def test_get_redirected_to_saved_food_page_when_deleting(self):
+    def test_get_redirected_to_saved_food_page_when_deleting_product(self):
         request = self.factory.post(reverse(
             'Nutella:product',
             args=(self.product.id,)
@@ -339,13 +353,6 @@ class RegisterViewTest(TestCase):
         new_user = MyUser.objects.last()
         self.assertEqual(new_user, None)
 
-    def test_get_redirected_to_home_page_when_registered(self): # à vérifier
-        response = self.client.post(
-            '/register/',
-            {'name': 'john@doe.com', 'password': 'johndoe'}
-            )
-        self.assertEqual(response.url, '/')
-
 
 class LogoutViewTest(TestCase):
 
@@ -378,3 +385,58 @@ class AdminViewTest(TestCase):
     def test_can_access_admin_view(self):
         response = self.client.get(reverse('Nutella:register'))
         self.assertEqual(response.status_code, 200)
+
+
+class CategoryModelTest(TestCase):
+
+    def create_conditions_for_test(self):
+        category = Category.objects.create(
+            name='test_category'
+        )
+        return category
+
+    def test_can_create_category(self):
+        category = self.create_conditions_for_test()
+        last_category = Category.objects.last()
+        self.assertEqual(category, last_category)
+
+    def test_can_render_category_name_when_called(self):
+        category = self.create_conditions_for_test()
+        self.assertEqual(category.name, category.__str__())
+
+
+class ProductModelTest(TestCase):
+
+    def create_conditions_for_test(self):
+        category = Category.objects.create(
+            name='test_category'
+        )
+        product = Product.objects.create(
+            name='test_name',
+            brand='test_brand',
+            nutri_grade='a',
+            category=category
+        )
+        return product
+
+    def test_can_create_product_models_if_category_defined(self):
+        product = self.create_conditions_for_test()
+        last_product = Product.objects.last()
+        self.assertEqual(product, last_product)
+
+    def test_can_render_product_name_when_called(self):
+        product = self.create_conditions_for_test()
+        self.assertEqual(product.name, product.__str__())
+
+    def test_get_better_food_method(self):
+        product = self.create_conditions_for_test()
+        category = Product.objects.last().category
+        Product.objects.create(
+            name='new_test_product',
+            brand='test_brand',
+            nutri_grade='b',
+            category=category
+        )
+        right_order = [elt for elt in Product.objects.all().order_by('nutri_grade')]
+        order_returned = [elt for elt in product.get_better_food(product)]
+        self.assertEqual(right_order, order_returned)

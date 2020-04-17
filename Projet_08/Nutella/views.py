@@ -169,55 +169,6 @@ class ResultsView(ListView, BaseFormView):
         return self.get(self.request)
 
 
-class ResultsView2(ListView):
-    # to be deleted ...
-    template_name = 'Nutella/results.html'
-    context_object_name = 'products'
-
-    def post(self, request):
-
-        form = SearchForm(data=request.POST)
-        if form.is_valid():
-            search_terms = form.cleaned_data.get('search')
-            result = Product.objects.filter(
-                category__name__icontains=search_terms)
-            if not result:
-                result = Product.objects.filter(name__icontains=search_terms)
-            result = result.order_by('pk')
-            request.session['last_search'] = {'search_terms': search_terms}
-            paginator = Paginator(result, 6)
-            page_number = request.GET.get('page')
-            page_obj = paginator.get_page(page_number)
-            return render(request,
-                          self.template_name,
-                          {'products': result,
-                           'search_terms': search_terms,
-                           'page_obj': page_obj})
-        else:
-            return render(request, self.template_name)
-
-    def get(self, request):
-
-        if 'last_search' in request.session:
-            context = request.session['last_search']
-            search_terms = context['search_terms']
-            result = Product.objects.filter(
-                category__name__icontains=search_terms)
-            if not result:
-                result = Product.objects.filter(name__icontains=search_terms)
-            context['products'] = result
-        else:
-            return HttpResponseRedirect(reverse('Nutella:index'))
-        result = result.order_by('pk')
-        paginator = Paginator(result, 6)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        context['page_obj'] = page_obj
-        return render(request,
-                      self.template_name,
-                      context)
-
-
 class LoginView(View):
     """
     Displays form to log in.
