@@ -114,7 +114,6 @@ DATABASES = {
     }
 }
 
-
 if os.environ.get('ENV') == 'PRODUCTION':
 
     # Search for the database url and modify DATABASES settings
