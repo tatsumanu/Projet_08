@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import django_heroku
 import dj_database_url
 import psycopg2.extensions
 
@@ -53,7 +54,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -162,5 +162,5 @@ if os.environ.get('ENV') == 'PRODUCTION':
         os.path.join(BASE_DIR, 'static'),
     )
 
-    # Simplified static file serving
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    # Configure Django App for Heroku.
+    django_heroku.settings(locals())
