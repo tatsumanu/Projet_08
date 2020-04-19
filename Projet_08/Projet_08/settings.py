@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import dj_database_url
 import psycopg2.extensions
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -21,14 +22,31 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '2*e&k9#foo#=_ps@(rem#0b$^-a$5i4n$ccw9d9eiip0-vieg%'
+SECRET_KEY = os.environ.get('SECRET_KEY', '2*e&k9#foo#=_ps@(rem#0b$^-a$5i4n$ccw9d9eiip0-vieg%')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get('ENV') == 'PRODUCTION':
+    DEBUG = False
+
+    # Static files settings
+    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+
+    # Extra places for collectstatic to find static files
+    STATICFILES_DIR = (os.path.join(PROJECT_ROOT, 'static'),)
+
+    # Simplified static file serving
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+else:
+    DEBUG = True
+
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'testserver',
+    'betterfood.herokuapp.com',
 ]
 
 
@@ -48,6 +66,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhitenoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -94,6 +113,13 @@ DATABASES = {
         },
     }
 }
+
+
+if os.environ.get('ENV') == 'PRODUCTION':
+
+    # Search for the database url and modify DATABASES settings
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES['default'].update(db_from_env)
 
 
 # Password validation
