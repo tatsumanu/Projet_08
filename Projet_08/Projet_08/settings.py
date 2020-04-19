@@ -27,18 +27,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '2*e&k9#foo#=_ps@(rem#0b$^-a$5i4n$ccw9
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.environ.get('ENV') == 'PRODUCTION':
     DEBUG = False
-
-    # Static files settings
-    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-
-    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-
-    # Extra places for collectstatic to find static files
-    STATICFILES_DIR = (os.path.join(PROJECT_ROOT, 'static'),)
-
-    # Simplified static file serving
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 else:
     DEBUG = True
 
@@ -164,3 +152,16 @@ AUTH_USER_MODEL = 'Nutella.MyUser'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+if os.environ.get('ENV') == 'PRODUCTION':
+
+    # Static files settings
+    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+
+    # Extra places for collectstatic to find static files
+    STATICFILES_DIR = (os.path.join(PROJECT_ROOT, 'static'),)
+
+    # Simplified static file serving
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
