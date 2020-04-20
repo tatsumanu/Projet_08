@@ -1,1 +1,0 @@
-web: gunicorn Projet_08.wsgi
