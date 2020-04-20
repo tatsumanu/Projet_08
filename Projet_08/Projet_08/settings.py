@@ -159,7 +159,7 @@ if os.environ.get('ENV') == 'PRODUCTION':
 
     # Extra places for collectstatic to find static files
     STATICFILES_DIR = (
-        os.path.join(BASE_DIR, 'static'),
+        os.path.join(BASE_DIR, 'Nutella', 'static'),
     )
 
     # Configure Django App for Heroku.
