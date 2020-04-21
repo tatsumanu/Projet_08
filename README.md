@@ -5,16 +5,14 @@ Le but de ce projet était la conception d'un site web utilisant les données de
 ## Fonctionnalités
 
 Dans la version actuelle du site, l'utilisateur peut:
-Parcourir le site
-Effectuer des recherches d'aliments
-Créer un compte
-Se connecter une fois le compte créé
-Enregistrer des aliments plus sains parmi ceux proposés par l'application
-Consulter les aliments précédemment sauvegardés / supprimer un ou plusieurs de ces aliments
+- Parcourir le site
+- Effectuer des recherches d'aliments
+- Créer un compte
+- Se connecter une fois le compte créé
+- Enregistrer des aliments plus sains parmi ceux proposés par l'application
+- Consulter les aliments précédemment sauvegardés / supprimer un ou plusieurs de ces aliments
 
-Le projet comporte deux applications principales:
-'Auth' qui gère la création et la gestion des utilisateurs
-'Nutella' est chargée de la gestion des produits alimentaires
+Le projet comporte deux applications principales: 'Auth' qui gère la création et la gestion des utilisateurs et 'Nutella' est chargée de la gestion des produits alimentaires.
 
 ## Prérequis
 
