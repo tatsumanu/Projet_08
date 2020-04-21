@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath Projet_08.wsgi
+web: gunicorn Projet_08.wsgi
