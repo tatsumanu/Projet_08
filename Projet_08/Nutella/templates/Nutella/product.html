@@ -23,15 +23,15 @@
 
                 <!-- Display the right nutriscore image-->
                 {% if product.nutri_grade == 'a' %}
-                    <img src="{% static 'Nutella/assets/img/nutriscore-a.svg' %}">
+                    <img src="{% static 'Nutella/img/nutriscore-a.svg' %}">
                 {% elif product.nutri_grade == 'b' %}
-                    <img src="{% static 'Nutella/assets/img/nutriscore-b.svg' %}">
+                    <img src="{% static 'Nutella/img/nutriscore-b.svg' %}">
                 {% elif product.nutri_grade == 'c' %}
-                    <img src="{% static 'Nutella/assets/img/nutriscore-c.svg' %}">
+                    <img src="{% static 'Nutella/img/nutriscore-c.svg' %}">
                 {% elif product.nutri_grade == 'd' %}
-                    <img src="{% static 'Nutella/assets/img/nutriscore-d.svg' %}">
+                    <img src="{% static 'Nutella/img/nutriscore-d.svg' %}">
                 {% else %}
-                    <img src="{% static 'Nutella/assets/img/nutriscore-e.svg' %}">
+                    <img src="{% static 'Nutella/img/nutriscore-e.svg' %}">
                 {% endif %}
                 <img src="{{ product.image_xl }}" alt="{{ product.name }}">
             </div>

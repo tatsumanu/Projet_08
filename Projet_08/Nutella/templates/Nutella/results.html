@@ -34,15 +34,15 @@
                                 <!-- Display the right nutriscore image-->
 
                                 {% if product.nutri_grade == 'a' %}
-                                    <img src="{% static 'Nutella/assets/img/nutri-a.png' %}" style="vertical-align: top;">
+                                    <img src="{% static 'Nutella/img/nutri-a.png' %}" style="vertical-align: top;">
                                 {% elif product.nutri_grade == 'b' %}
-                                    <img src="{% static 'Nutella/assets/img/nutri-b.png' %}" style="vertical-align: top;">
+                                    <img src="{% static 'Nutella/img/nutri-b.png' %}" style="vertical-align: top;">
                                 {% elif product.nutri_grade == 'c' %}
-                                    <img src="{% static 'Nutella/assets/img/nutri-c.png' %}" style="vertical-align: top;">
+                                    <img src="{% static 'Nutella/img/nutri-c.png' %}" style="vertical-align: top;">
                                 {% elif product.nutri_grade == 'd' %}
-                                    <img src="{% static 'Nutella/assets/img/nutri-d.png' %}" style="vertical-align: top;">
+                                    <img src="{% static 'Nutella/img/nutri-d.png' %}" style="vertical-align: top;">
                                 {% else %}
-                                    <img src="{% static 'Nutella/assets/img/nutri-e.png' %}" style="vertical-align: top;">
+                                    <img src="{% static 'Nutella/img/nutri-e.png' %}" style="vertical-align: top;">
                                 {% endif %}
                                 
                                 <img class="img" src="{{ product.image_small }}" alt="{{ product.image_small }}" title="{{ product.name }}">
@@ -109,7 +109,7 @@
                 <hr class="divider my-4" />
             </div>
             <div class="col-lg-8 align-self-baseline">
-                <img src="{% static 'Nutella/assets/img/remy-5.jpg' %}" alt="Photo de Rémy">
+                <img src="{% static 'Nutella/img/remy-5.jpg' %}" alt="Photo de Rémy">
                            
                 <h3 class="h4 mb-2"><a href="{% url 'Nutella:index' %}">Effectuer une nouvelle recherche?</a></h3>
             </div>
