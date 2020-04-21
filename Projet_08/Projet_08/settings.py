@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'Auth.apps.AuthConfig',
     'Nutella.apps.NutellaConfig',
     'debug_toolbar',
 ]
@@ -146,7 +147,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'Nutella.MyUser'
+AUTH_USER_MODEL = 'Auth.MyUser'
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -160,6 +161,7 @@ if os.environ.get('ENV') == 'PRODUCTION':
     # Extra places for collectstatic to find static files
     STATICFILES_DIR = (
         os.path.join(BASE_DIR, 'Nutella', 'static'),
+        os.path.join(BASE_DIR, 'Auth', 'static'),
     )
 
     # Configure Django App for Heroku.

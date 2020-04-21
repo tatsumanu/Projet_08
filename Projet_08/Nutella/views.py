@@ -1,14 +1,10 @@
-from django.shortcuts import render, reverse, redirect, get_object_or_404
+from django.shortcuts import reverse, redirect, get_object_or_404
 from django.views.generic.edit import FormView, BaseFormView
 from django.views.generic import TemplateView, DetailView, ListView, View
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.core.paginator import Paginator
 
-from .admin import UserCreationForm
 from .models import Product
 from .forms import ContactForm, SearchForm
 
@@ -56,15 +52,6 @@ class ProductView(DetailView):
     model = Product
 
 
-class AccountView(LoginRequiredMixin, TemplateView):
-    """
-    This view displays informantions for an account:
-    if you're registered and logged in, you can access this page.
-    """
-    login_url = '/login/'
-    template_name = 'Nutella/account.html'
-
-
 class SavedFoodView(LoginRequiredMixin, ListView):
     """
     Displays all the food products already saved by the logged in
@@ -77,7 +64,7 @@ class SavedFoodView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         "This is where we try to retrieve already saved products."
-        return Product.objects.filter(users=self.request.user)
+        return Product.objects.filter(users=self.request.user).order_by('pk')
 
 
 class AddToFavoriteView(View):
@@ -167,80 +154,3 @@ class ResultsView(ListView, BaseFormView):
         search_terms = form.cleaned_data.get('search')
         self.request.session['last_search'] = {'search_terms': search_terms}
         return self.get(self.request)
-
-
-class LoginView(View):
-    """
-    Displays form to log in.
-    """
-
-    def post(self, request):
-        """
-        When submitting informations via the form, this method is called
-         and handles the login process.
-        """
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.success(request, f"Bienvenue {username}!")
-                return redirect(reverse('Nutella:index',))
-            else:
-                form = AuthenticationForm()
-        else:
-            form = AuthenticationForm()
-        messages.info(request, 'Une erreur est survenue. Veuillez réessayer!')
-        return render(request, 'Nutella/login.html', {'form': form})
-
-    def get(self, request):
-        """
-        Simply displays the form when calling the webpage.
-        """
-        form = AuthenticationForm()
-        return render(request, 'Nutella/login.html', {'form': form})
-
-
-class RegisterView(View):
-    """
-    A view that handle the creation of a new user.
-    """
-
-    def post(self, request):
-        """
-        Handles the case information is passed through the form to the
-         webserver.
-        """
-        form = UserCreationForm(data=request.POST)
-        if form.is_valid():
-            user = form.save()
-            name = form.cleaned_data.get('name')
-            messages.success(request, f"Bienvenue {name}!")
-            login(request, user)
-            return redirect('Nutella:index',)
-        else:
-            for elt in form.errors.as_data():
-                messages.info(request, f"{elt}: {form.errors.as_data()[elt]}")
-            return redirect('Nutella:register',)
-
-    def get(self, request):
-        """
-        Displays the webpage with the form when trying to access the page
-         for the first time.
-        """
-        template_name = 'Nutella/register.html'
-        form = UserCreationForm()
-        return render(request, template_name, {'form': form})
-
-
-class LogoutView(View):
-    """
-    Class based view to simply log out the user. Displays also a message.
-    """
-
-    def get(self, request):
-        logout(request)
-        messages.info(request, "Vous avez été déconnecté!")
-        return redirect(reverse('Nutella:index',))

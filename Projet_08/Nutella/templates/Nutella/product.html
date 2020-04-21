@@ -14,7 +14,7 @@
 </header>
 
 <!-- User informations section-->
-<section class="page-section" id="user_informations" style="height: 45vh; min-height: 45rem; padding: 3rem 0;">
+<section class="page-section" id="user_informations" style="min-height: 45rem; padding: 3rem 0;">
     <div class="container">
         <h2 class="text-center mt-0">Voici les informations disponibles sur ce produit</h2>
         <hr class="divider my-4" />
@@ -52,7 +52,7 @@
                     </form></p>
                 {% else %}
                     <p>
-                        <a href="{% url 'Nutella:login' %}">Se connecter pour commencer à sauvegarder des aliments!</a>
+                        <a href="{% url 'Auth:login' %}">Se connecter pour commencer à sauvegarder des aliments!</a>
                     </p>
                 {% endif %}
 

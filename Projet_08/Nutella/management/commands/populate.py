@@ -21,17 +21,14 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--category', action='append', default=[], dest='categories'
+            '--category', action='append',
+            default=self.categories, dest='categories'
         )
         parser.add_argument(
             '--nb_products', type=int, dest='nb_products', default=100
         )
 
     def handle(self, *args, **options):
-        if not options['categories']:
-            options['categories'] = self.categories
-        if not options['nb_products']:
-            options['nb_products'] = 100
         populate_db = PopulateDb(
             options['categories'], options['nb_products']
         )
@@ -41,7 +38,7 @@ class Command(BaseCommand):
 
 class PopulateDb:
 
-    help = """ Class that manages to collect food products from the API and
+    """ Class that manages to collect food products from the API and
      then populate the database with it. """
 
     # Some needed data
