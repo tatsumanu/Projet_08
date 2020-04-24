@@ -71,3 +71,15 @@ Une couverture de ces tests peut même être effectuée via coverage. La deuxiè
 heroku run python coverage run manage.py test nom_application
 heroku run python coverage report
 ```
+
+Les tests du module Auth.tests comprennent la possibilité de simuler un parcours utilisateur type (création d'un nouvel utilisateur, déconnexion, connexion puis déconnexion) avec Selenium, auxquels on peut accéder au moyen de la commande suivante.
+```bash
+heroku run python manage.py test Auth.tests.RegisterLogoutThenLoginLogoutTest
+```
+
+De la même façon, le module Nutella.tests comprend des tests qui simulent une recherche de produits et l'ajout aux favoris avec Selenium.
+```bash
+heroku run python manage.py test Nutella.tests.RegisterSearchSaveProductTest
+```
+
+## ---------

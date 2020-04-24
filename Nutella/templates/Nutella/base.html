@@ -35,12 +35,12 @@
                     <ul class="navbar-nav ml-auto my-2 my-lg-0">
                         <li class="nav-item"><a class="nav-link js-scroll-trigger"><form action="{% url 'Nutella:results' %}" method="POST">{% csrf_token %}{{ search_form }}</form></a></li>
                         {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:account' %}"><i class='far fa-user' style='font-size:24px;' title="Mon compte"></i></a></li>
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:saved_food' %}"><i class="fas fa-carrot" style="font-size: 24px;" title="Mes aliments"></i></a></li>
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:logout' %}"><i class="fas fa-sign-out-alt" style="font-size: 24px;" title="Déconnexion"></i></a></li>
+                            <li class="nav-item" id="account"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:account' %}"><i class='far fa-user' style='font-size:24px;' title="Mon compte"></i></a></li>
+                            <li class="nav-item" id="savedfood"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:saved_food' %}"><i class="fas fa-carrot" style="font-size: 24px;" title="Mes aliments"></i></a></li>
+                            <li class="nav-item" id="logout"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:logout' %}"><i class="fas fa-sign-out-alt" style="font-size: 24px;" title="Déconnexion"></i></a></li>
                         {% else %}
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:login' %}">Se connecter</a></li>
-                            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:register' %}">Créer un compte</a></li>
+                            <li class="nav-item" id="login"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:login' %}">Se connecter</a></li>
+                            <li class="nav-item" id="create"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:register' %}">Créer un compte</a></li>
                             <li class="nav-item"><a class="nav-link js-scroll-trigger {% block menu_active_accueil %}{% endblock %}" href="{% url 'Nutella:index' %}">Accueil</a></li>
                         {% endif %}
                         {% if messages %}

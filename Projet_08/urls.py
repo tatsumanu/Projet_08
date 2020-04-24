@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('Auth.urls')),
 ]
 
+"""
 if settings.DEBUG:  # pragma: no cover
     import debug_toolbar
     urlpatterns = [
@@ -32,3 +33,4 @@ if settings.DEBUG:  # pragma: no cover
         # url(r'^__debug__/', include(debug_toolbar.urls)),
 
     ] + urlpatterns
+"""
