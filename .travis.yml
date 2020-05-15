@@ -1,0 +1,20 @@
+language: python
+python:
+  - '3.8'
+
+before script:
+  - pip3 install -r requirements.txt
+
+env: DJANGO_SETTINGS_MODULE="Projet_08.settings"
+
+services:
+  - postgresql
+
+script:
+  - ./manage.py test Auth.tests.test_base
+  - ./manage.py test Nutella.tests.test_base
+
+branches:
+  only:
+    - staging
+
