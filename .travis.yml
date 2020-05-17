@@ -11,8 +11,8 @@ services:
   - postgresql
 
 script:
-  - sudo python3 ./manage.py test Auth.tests.test_base
-  - sudo python3 ./manage.py test Nutella.tests.test_base
+  - sudo python3.8 ./manage.py test Auth.tests.test_base
+  - sudo python3.8 ./manage.py test Nutella.tests.test_base
 
 branches:
   only:
