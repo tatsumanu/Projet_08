@@ -5,7 +5,7 @@ python:
 before script:
   - pip3 install -r requirements.txt
 
-env: DJANGO_SETTINGS_MODULE="Projet_08.settings"
+env: DJANGO_SETTINGS_MODULE="Projet_08.settings.travis"
 
 services:
   - postgresql
