@@ -43,7 +43,7 @@ class PopulateDb:
 
     # Some needed data
     data = ['product_name', 'brands', 'nutrition_grade_fr', 'url',
-            'image_small_url', 'image_front_url', 'stores', 'ingredients_text']
+            'image_small_url', 'image_front_url', 'stores', 'ingredients_text',             'id', 'last_modified_t']
 
     url = "https://fr.openfoodfacts.org/cgi/search.pl?"
 
@@ -97,7 +97,9 @@ class PopulateDb:
                         stores=product['stores'],
                         ingredients=product['ingredients_text'],
                         image_small=product['image_small_url'],
-                        image_xl=product['image_front_url']
+                        image_xl=product['image_front_url'],
+                        code=product['id'],
+                        date=product['last_modified_t']
                     )
 
         print(""" Operations completed successfully in {:02f}\
