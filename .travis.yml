@@ -11,7 +11,9 @@ services:
   - postgresql
 
 script:
-  - python3.8 manage.py test Auth.tests.test_base
+  - python3 manage.py makemigrations
+  - python3 manage.py migrate
+  - python3 manage.py test Auth.tests.test_base
   - python3 manage.py test Nutella.tests.test_base
 
 branches:
