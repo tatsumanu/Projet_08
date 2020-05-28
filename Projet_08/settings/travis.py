@@ -8,6 +8,9 @@ DATABASES = {
 	 'PASSWORD': '',
 	 'HOST': '',
 	 'PORT': '',
+         'OPTIONS': {
+            'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
+        },
     },
 }
 
