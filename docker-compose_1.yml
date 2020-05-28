@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=effacé
+      - POSTGRES_USER=effacé
+      - POSTGRES_PASSWORD=effacé
+  web:
+    build: .
+    command: supervisord -c /etc/supervisor/supervisord.conf
+    command: supervisorctl -c /etc/supervisor/supervisord.conf
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+
