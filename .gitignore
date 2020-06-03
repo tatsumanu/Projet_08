@@ -1,6 +1,3 @@
-# Don't send production configuration file
-Projet_08/settings/production.py
-
 # Don't send staticfiles again
 staticfiles
 
