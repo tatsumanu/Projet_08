@@ -16,8 +16,20 @@ script:
   - python3 manage.py test Auth.tests.test_base
   - python3 manage.py test Nutella.tests.test_base
 
-branches:
-  only:
-    - staging
-    - master
+stages: 
+  - deploy
+
+jobs:
+  include:
+    - stage: deploy
+      before_script: []
+      env:
+        - "USER=manu"
+      script:
+        - echo ssh $user@37.187.116.21
+
+      branches:
+        only:
+          - staging
+          - master
 
