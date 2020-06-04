@@ -6,15 +6,17 @@ before script:
 env: DJANGO_SETTINGS_MODULE="Projet_08.settings.travis"
 services:
 - postgresql
-script:
-- python3 manage.py makemigrations
-- python3 manage.py migrate
-- python3 manage.py test Auth.tests.test_base
-- python3 manage.py test Nutella.tests.test_base
 stages:
+- test
 - deploy
 jobs:
   include:
+  - stage: test
+    script:
+      - python3 manage.py makemigrations
+      - python3 manage.py migrate
+      - python3 manage.py test Auth.tests.test_base
+      - python3 manage.py test Nutella.tests.test_base
   - stage: deploy
     before_script: []
     env:
@@ -22,7 +24,7 @@ jobs:
     script:
     - openssl aes-256-cbc -K $encrypted_50d31c429933_key -iv $encrypted_50d31c429933_iv
       -in id_rsa.enc -out id_rsa -d
-    - ssh -i id_rsa $USER@37.187.116.21 "ls;pwd"
+    - ssh -i -o VerifyHostKeyDNS=no id_rsa $USER@37.187.116.21 "ls;pwd"
     branches:
       only:
       - staging
