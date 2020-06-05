@@ -32,7 +32,7 @@ jobs:
       -in id_rsa.enc -out id_rsa -d
     - eval "$(ssh-agent -s)"
 
-    - "$(ls;pwd)"
+    - "$ls"
 
     branches:
       only:
