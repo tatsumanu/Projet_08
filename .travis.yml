@@ -34,17 +34,13 @@ jobs:
     before_script: []
     env:
     - USER="manu"
-    before_deploy: 
+    after_success:  
     - openssl aes-256-cbc -K $encrypted_50d31c429933_key -iv $encrypted_50d31c429933_iv
       -in id_rsa.enc -out id_rsa -d
     - eval "$(ssh-agent -s)"
     - chmod 600 id_rsa
     - ssh-add id_rsa
     - "pwd"
-    deploy:
-      provider: script
-      cleanup: true
-      script: "ls"
-      on:
-        branch: staging
+    
+    branch: staging
 
