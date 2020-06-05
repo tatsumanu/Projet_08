@@ -3,9 +3,6 @@ language: python
 python:
 - '3.8'
 
-before_script:
-- pip3 install -r requirements.txt
-
 env: DJANGO_SETTINGS_MODULE="Projet_08.settings.travis"
 
 services:
@@ -15,14 +12,18 @@ stages:
 - test
 - deploy
 
-script:
-  - python3 manage.py makemigrations
-  - python3 manage.py migrate
-  - python3 manage.py test Auth.tests.test_base
-  - python3 manage.py test Nutella.tests.test_base
-
 jobs:
   include:
+
+  - stage: test
+    before_script:
+    - pip3 install -r requirements.txt
+    script:
+    - python3 manage.py makemigrations
+    - python3 manage.py migrate
+    - python3 manage.py test Auth.tests.test_base
+    - python3 manage.py test Nutella.tests.test_base
+
   - stage: deploy
     before_script: []
     env:
@@ -33,7 +34,7 @@ jobs:
     - eval "$(ssh-agent -s)"
     - chmod 600 id_rsa
     - ssh-add id_rsa
-    - "ls;pwd;cd Projet_08;pwd"
+    - "pwd"
 
     branches:
       only:
