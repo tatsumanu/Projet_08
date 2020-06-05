@@ -13,11 +13,11 @@ jobs:
   - stage: test
     before_script:
     - pip3 install -r requirements.txt
-
-    env: DJANGO_SETTINGS_MODULE="Projet_08.settings.travis"
-
+    
     services:
     - postgresql
+
+    env: DJANGO_SETTINGS_MODULE="Projet_08.settings.travis"
 
     script:
     - python3 manage.py makemigrations
@@ -30,18 +30,18 @@ jobs:
   - stage: deploy
     addons:
       ssh_known_hosts: 37.187.116.21
-    services: []
     before_script: []
     env:
     - USER="manu"
-    after_success:  
-      script:
-      - openssl aes-256-cbc -K $encrypted_50d31c429933_key -iv $encrypted_50d31c429933_iv
-        -in id_rsa.enc -out id_rsa -d
-      - eval "$(ssh-agent -s)"
-      - chmod 600 id_rsa
-      - ssh-add id_rsa
-      - "pwd"
+    script:  
+    - openssl aes-256-cbc -K $encrypted_50d31c429933_key -iv $encrypted_50d31c429933_iv
+      -in id_rsa.enc -out id_rsa -d
+    - eval "$(ssh-agent -s)"
+    - chmod 600 id_rsa
+    - ssh-add id_rsa
+    - "pwd"
     
-    branches: staging
+    branches:
+      only:
+      - staging
 
