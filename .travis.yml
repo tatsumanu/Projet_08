@@ -3,11 +3,6 @@ language: python
 python:
 - '3.8'
 
-env: DJANGO_SETTINGS_MODULE="Projet_08.settings.travis"
-
-services:
-- postgresql
-
 stages:
 - test
 - deploy
@@ -18,6 +13,12 @@ jobs:
   - stage: test
     before_script:
     - pip3 install -r requirements.txt
+
+    env: DJANGO_SETTINGS_MODULE="Projet_08.settings.travis"
+
+    services:
+    - postgresql
+
     script:
     - python3 manage.py makemigrations
     - python3 manage.py migrate
@@ -27,7 +28,7 @@ jobs:
   - stage: deploy
     addons:
       ssh_known_hosts: 37.187.116.21
-
+    service: []
     before_script: []
     env:
     - USER="manu"
