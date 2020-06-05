@@ -29,7 +29,8 @@ jobs:
 
   - stage: deploy
     addons:
-      ssh_known_hosts: 37.187.116.21
+      ssh_known_hosts: <manu@ns329147.ip-37-187-116.eu>
+
     before_script: []
     env:
     - USER="manu"
