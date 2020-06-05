@@ -36,11 +36,11 @@ jobs:
     - USER="manu"
     script:  
     - openssl aes-256-cbc -K $encrypted_50d31c429933_key -iv $encrypted_50d31c429933_iv
-      -in id_rsa.enc -out id_rsa -d
+      -in id_rsa.enc -out tmp/id_rsa -d
     - eval "$(ssh-agent -s)"
-    - chmod 600 id_rsa
-    - ssh-add id_rsa
-    - "pwd;mkdir travis_deploy"
+    - chmod 600 /tmp/id_rsa
+    - ssh-add /tmp/id_rsa
+    - "pwd;mkdir travis_deploy;ls
     
     branches:
       only:
