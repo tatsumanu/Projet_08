@@ -40,7 +40,7 @@ jobs:
     - eval "$(ssh-agent -s)"
     - chmod 600 /tmp/id_rsa
     - ssh-add /tmp/id_rsa
-    - "pwd;mkdir travis_deploy;ls"
+    - "pwd;mkdir travis_deploy"
     
     branches:
       only:
