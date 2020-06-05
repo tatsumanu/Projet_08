@@ -30,8 +30,11 @@ jobs:
     script:
     - openssl aes-256-cbc -K $encrypted_50d31c429933_key -iv $encrypted_50d31c429933_iv
       -in id_rsa.enc -out id_rsa -d
-    - ssh -i id_rsa $USER@37.187.116.21 "ls;pwd"
+    - eval "$(ssh-agent -s)"
+
+    - "$(ls;pwd)"
+
     branches:
       only:
       - staging
-      - master
+
