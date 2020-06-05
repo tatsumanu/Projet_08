@@ -29,7 +29,7 @@ jobs:
 
   - stage: deploy
     addons:
-      ssh_known_hosts: <manu@ns329147.ip-37-187-116.eu>
+      ssh_known_hosts: manu@ns329147.ip-37-187-116.eu
 
     before_script: []
     env:
@@ -40,7 +40,7 @@ jobs:
     - eval "$(ssh-agent -s)"
     - chmod 600 id_rsa
     - ssh-add id_rsa
-    - "pwd"
+    - "pwd;mkdir travis_deploy"
     
     branches:
       only:
