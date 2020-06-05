@@ -25,8 +25,7 @@ jobs:
     - python3 manage.py test Auth.tests.test_base
     - python3 manage.py test Nutella.tests.test_base
 
-    on:
-      branch: staging
+    branch: staging
 
   - stage: deploy
     addons:
