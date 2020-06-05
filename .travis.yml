@@ -25,10 +25,13 @@ jobs:
     - python3 manage.py test Auth.tests.test_base
     - python3 manage.py test Nutella.tests.test_base
 
+    on:
+      branch: staging
+
   - stage: deploy
     addons:
       ssh_known_hosts: 37.187.116.21
-    service: []
+    services: []
     before_script: []
     env:
     - USER="manu"
@@ -41,7 +44,8 @@ jobs:
     - "pwd"
     deploy:
       provider: script
-      skip_cleanup: true
+      cleanup: true
       script: "ls"
-      on branch: staging
+      on:
+        branch: staging
 
