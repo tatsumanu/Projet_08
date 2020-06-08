@@ -9,7 +9,6 @@ stages:
 
 jobs:
   include:
-
   - stage: test
     before_script:
     - pip3 install -r requirements.txt
