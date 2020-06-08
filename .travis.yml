@@ -25,7 +25,7 @@ jobs:
   include:
   - stage: deploy
     addons: 
-      ssh_known_hosts: $HOST_NAME
+      ssh_known_hosts: 37.187.116.21 
     before_script: []
     env:
     - USER="manu"
