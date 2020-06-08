@@ -43,7 +43,7 @@ jobs:
     - cd ~/deploy
     - git clone https://github.com/tatsumanu/Projet_08.git
     - cd Projet_08
-    - python3 manage.py makemigrations
+    - python3 manage.py makemigrations --settings=Proje_08.settings.production
     - python3 manage.py migrate
     - supervisorctl restart
     
