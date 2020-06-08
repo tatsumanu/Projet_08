@@ -3,53 +3,37 @@ language: python
 python:
 - '3.8'
 
+before_script:
+- pip3 install -r requirements.txt
+
+env: DJANGO_SETTINGS_MODULE="Projet_08.settings.travis"
+
+services:
+- postgresql
+
 stages:
 - test
 - deploy
 
+script:
+  - python3 manage.py makemigrations
+  - python3 manage.py migrate
+  - python3 manage.py test Auth.tests.test_base
+  - python3 manage.py test Nutella.tests.test_base
+
 jobs:
   include:
-  - stage: test
-    before_script:
-    - pip3 install -r requirements.txt
-    
-    services:
-    - postgresql
-
-    env: DJANGO_SETTINGS_MODULE="Projet_08.settings.travis"
-
-    script:
-    - python3 manage.py makemigrations
-    - python3 manage.py migrate
-    - python3 manage.py test Auth.tests.test_base
-    - python3 manage.py test Nutella.tests.test_base
-
-    branches: staging
-
   - stage: deploy
-    addons:
-      ssh_known_hosts: "$HOST_NAME"
-
+    addons: 
+      ssh_known_hosts: $HOST_NAME
     before_script: []
     env:
     - USER="manu"
-    - DJANGO_SETTINGS_MODULE="Projet_08.settings.production"
-
-    script:  
+    script:
     - openssl aes-256-cbc -K $encrypted_50d31c429933_key -iv $encrypted_50d31c429933_iv
       -in id_rsa.enc -out id_rsa -d
-    - eval "$(ssh-agent -s)"
-    - chmod 600 id_rsa
-    - ssh-add id_rsa
-    - mkdir ~/deploy
-    - cd ~/deploy
-    - git clone https://github.com/tatsumanu/Projet_08.git
-    - cd Projet_08
-    - python3 manage.py makemigrations
-    - python3 manage.py migrate
-    - supervisorctl restart
-    
+    - ssh -i id_rsa ${USER}@${HOST_NAME} "ls;pwd"
     branches:
       only:
       - staging
-
+      - master
