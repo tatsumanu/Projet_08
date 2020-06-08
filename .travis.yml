@@ -29,7 +29,7 @@ jobs:
 
   - stage: deploy
     addons:
-      ssh_known_hosts: manu@ns329147.ip-37-187-116.eu
+      ssh_known_hosts: "$HOST_NAME"
 
     before_script: []
     env:
@@ -40,7 +40,7 @@ jobs:
     - eval "$(ssh-agent -s)"
     - chmod 600 id_rsa
     - ssh-add id_rsa
-    - "git clone https://github.com/tatsumanu/Projet_08.git;cd Projet_08;python3 manage.py collectstatic;python3 manage.py makemigrations;python3 manage.py migrate;supervisorctl restart"
+    - "cd Projet_08;git push deploy staging;python3 manage.py collectstatic;python3 manage.py makemigrations;python3 manage.py migrate;supervisorctl restart"
     
     branches:
       only:
