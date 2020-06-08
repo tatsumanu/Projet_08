@@ -40,7 +40,7 @@ jobs:
     - eval "$(ssh-agent -s)"
     - chmod 600 id_rsa
     - ssh-add id_rsa
-    - "cd Projet_08;git clone https://github.com/tatsumanu/Projet_08.git;python3 manage.py collectstatic;python3 manage.py makemigrations;python3 manage.py migrate;supervisorctl restart"
+    - "git clone https://github.com/tatsumanu/Projet_08.git;cd Projet_08;python3 manage.py collectstatic;python3 manage.py makemigrations;python3 manage.py migrate;supervisorctl restart"
     
     branches:
       only:
