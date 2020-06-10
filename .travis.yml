@@ -42,10 +42,7 @@ jobs:
     - openssl aes-256-cbc -K $encrypted_50d31c429933_key -iv $encrypted_50d31c429933_iv
       -in id_rsa.enc -out id_rsa -d
     - chmod 600 id_rsa
-    - ssh -i id_rsa ${USER}@${HOST_NAME}
-    - cd Projet_08
-    - ls
-    - ./deploy.sh
+    - ssh -i id_rsa ${USER}@${HOST_NAME} "./Projet_08/deploy.sh"
 
     branches:
       only:
