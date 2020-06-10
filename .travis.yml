@@ -35,9 +35,7 @@ jobs:
 
     before_script: []
 
-    env:
-    - USER="manu"
-    - DJANGO_SETTINGS_MODULE="Projet_08.settings.production"
+    env: USER="manu" DJANGO_SETTINGS_MODULE="Projet_08.settings.production"
 
     script:
     - openssl aes-256-cbc -K $encrypted_50d31c429933_key -iv $encrypted_50d31c429933_iv
