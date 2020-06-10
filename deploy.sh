@@ -1,5 +1,6 @@
 #!/bin/sh
 
+source env/bin/activate
 cd Projet_08
 git pull
 python3.8 manage.py collectstatic
