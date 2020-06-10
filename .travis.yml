@@ -44,6 +44,7 @@ jobs:
     - chmod 600 id_rsa
     - ssh -i id_rsa ${USER}@${HOST_NAME}
     - cd Projet_08
+    - ls
     - ./deploy.sh
 
     branches:
