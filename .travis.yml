@@ -43,6 +43,7 @@ jobs:
       -in id_rsa.enc -out id_rsa -d
     - chmod 600 id_rsa
     - ssh -i id_rsa ${USER}@${HOST_NAME}
+    - cd Projet_08
     - ./deploy.sh
 
     branches:
