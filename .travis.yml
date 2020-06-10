@@ -42,7 +42,8 @@ jobs:
     - openssl aes-256-cbc -K $encrypted_50d31c429933_key -iv $encrypted_50d31c429933_iv
       -in id_rsa.enc -out id_rsa -d
     - chmod 600 id_rsa
-    - ssh -i id_rsa ${USER}@${HOST_NAME} "ls;pwd"
+    - ssh -i id_rsa ${USER}@${HOST_NAME}
+    - ./deploy.sh
 
     branches:
       only:
