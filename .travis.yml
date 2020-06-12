@@ -11,9 +11,6 @@ jobs:
   include:
 
   - stage: test
-
-    before_script:
-    - pip3 install -r requirements.txt
     
     services:
     - postgresql
@@ -35,15 +32,13 @@ jobs:
 
     before_script: []
 
-    env:
-    - USER="manu"
+    env: USER="manu" DJANGO_SETTINGS_MODULE="Projet_08.settings.production"
 
     script:
     - openssl aes-256-cbc -K $encrypted_50d31c429933_key -iv $encrypted_50d31c429933_iv
       -in id_rsa.enc -out id_rsa -d
     - chmod 600 id_rsa
-    - ssh -i id_rsa ${USER}@${HOST_NAME}
-    - ./deploy.sh
+    - ssh -i id_rsa ${USER}@${HOST_NAME} "./Projet_08/deploy.sh"
 
     branches:
       only:
