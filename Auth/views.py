@@ -79,7 +79,7 @@ class LogoutView(View):
     Class based view to simply log out the user. Displays also a message.
     """
 
-    def get(self, request):
+    def post(self, request):
         logout(request)
         messages.info(request, "Vous avez été déconnecté!")
         return redirect(reverse('Nutella:index',))

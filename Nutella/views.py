@@ -2,11 +2,13 @@ from django.shortcuts import reverse, redirect, get_object_or_404
 from django.views.generic.edit import FormView, BaseFormView
 from django.views.generic import TemplateView, DetailView, ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 
 from .models import Product
 from .forms import ContactForm, SearchForm
+from django.conf import settings
 
 
 # context_processors functions
@@ -67,11 +69,13 @@ class SavedFoodView(LoginRequiredMixin, ListView):
         return Product.objects.filter(users=self.request.user).order_by('pk')
 
 
-class AddToFavoriteView(View):
+class AddToFavoriteView(LoginRequiredMixin, View):
     """
     Creates a relation between an existing product and an
      identified user.
     """
+    
+    login_url = '/login/'
 
     def post(self, request, product_id):
         """
