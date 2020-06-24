@@ -106,7 +106,7 @@ class AddToFavoriteViewTest(TestCase):
             'Nutella:add_to_favorite',
             args=(10221,)
         ))
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 302)
 
     def test_can_add_to_favorite_if_logged_in(self):
         request = self.factory.post(reverse(
