@@ -81,10 +81,10 @@ WSGI_APPLICATION = 'Projet_08.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'purbeurre',
-        'USER': 'base_dev',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASS,
+        'HOST': 'localhost',
         'PORT': '5432',
         'OPTIONS': {
             'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
@@ -138,3 +138,17 @@ AUTH_USER_MODEL = 'Auth.MyUser'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+# email config
+
+EMAIL_USER = 'master'
+EMAIL_PASSWORD = 'test@test.com'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = EMAIL_USER
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+SERVER_EMAIL = EMAIL_USER

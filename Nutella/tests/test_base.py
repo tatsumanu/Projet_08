@@ -45,6 +45,13 @@ class ContactViewTest(TestCase):
         response = self.client.get(reverse('Nutella:contact'))
         self.assertEqual(response.resolver_match.func.__name__,
                          ContactView.as_view().__name__)
+                         
+    def test_get_redirected_after_sending_an_email(self):
+        response = self.client.post(
+            reverse('Nutella:contact'),
+            {'email': 'test@test.fr',
+             'message': 'This is a test message!'})
+        self.assertEqual(response.status_code, 302)
 
 
 class SavedFoodViewTest(TestCase):

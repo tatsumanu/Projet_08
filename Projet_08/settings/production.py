@@ -12,6 +12,8 @@ with open('/etc/project_var.txt') as f:
     DB_PASS = var_list[5].strip()
     HOST = var_list[2].strip()
     DJANGO_SETTINGS_MODULE = var_list[6].strip()
+    EMAIL_USER = var_list[7].strip()
+    EMAIL_PASSWORD = var_list[8].strip()
 
 sentry_sdk.init(
     dsn=DSN_KEY,
@@ -38,4 +40,3 @@ DATABASES = {
         },
     }
 }
-
