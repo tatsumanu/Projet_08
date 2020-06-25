@@ -81,10 +81,10 @@ WSGI_APPLICATION = 'Projet_08.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': DB_NAME,
-        'USER': DB_USER,
-        'PASSWORD': DB_PASS,
-        'HOST': 'localhost',
+        'NAME': 'purbeurre',
+        'USER': 'base_dev',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
         'OPTIONS': {
             'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
