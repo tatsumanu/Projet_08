@@ -37,7 +37,14 @@
                         {% if user.is_authenticated %}
                             <li class="nav-item" id="account"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:account' %}"><i class='far fa-user' style='font-size:24px;' title="Mon compte"></i></a></li>
                             <li class="nav-item" id="savedfood"><a class="nav-link js-scroll-trigger" href="{% url 'Nutella:saved_food' %}"><i class="fas fa-carrot" style="font-size: 24px;" title="Mes aliments"></i></a></li>
-                            <li class="nav-item" id="logout"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:logout' %}"><i class="fas fa-sign-out-alt" style="font-size: 24px;" title="Déconnexion"></i></a></li>
+                            <li class="nav-item" id="logout">
+                                    <form action="{% url 'Auth:logout' %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="Déconnexion">
+                                        <a class="nav-link js-scroll-trigger" href="#" onclick="document.forms[1].submit();return false;"><i class="fas fa-sign-out-alt" style="font-size: 24px;" title="Déconnexion"></i></a>
+                                    </form>
+                
+                                    </li>
                         {% else %}
                             <li class="nav-item" id="login"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:login' %}">Se connecter</a></li>
                             <li class="nav-item" id="create"><a class="nav-link js-scroll-trigger" href="{% url 'Auth:register' %}">Créer un compte</a></li>

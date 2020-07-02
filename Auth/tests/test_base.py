@@ -113,9 +113,9 @@ class LogoutViewTest(TestCase):
                          LogoutView.as_view().__name__)
 
     def test_logout_when_logged_in(self):
-        response = self.client.get('/logout/')
+        response = self.client.post('/logout/')
         self.assertEqual(response.status_code, 302)
 
     def test_get_redirected_to_home_page_when_logged_out(self):
-        response = self.client.get('/logout/')
+        response = self.client.post('/logout/')
         self.assertEqual(response.url, '/')

@@ -2,11 +2,13 @@ from django.shortcuts import reverse, redirect, get_object_or_404
 from django.views.generic.edit import FormView, BaseFormView
 from django.views.generic import TemplateView, DetailView, ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 
 from .models import Product
 from .forms import ContactForm, SearchForm
+from django.conf import settings
 
 
 # context_processors functions
@@ -40,7 +42,28 @@ class ContactView(FormView):
     """
     template_name = 'Nutella/contact.html'
     form_class = ContactForm
-    success_url = 'Nutella/thanks/'
+    success_url = '/'
+    
+    def post(self, request):
+        user = request.POST['email']
+        message = "This is an automated reply sent from Pur Beurre Website.\
+    \nWe will soon answer you! Thank you for supporting 'Pur Beurre!'\n"
+        message += request.POST['message']
+        email_from = settings.EMAIL_HOST_USER
+        if user and message:
+            send_mail(
+            'Reply from Pur Beurre',
+            message,
+            email_from,
+            [user, email_from],
+            fail_silently=True,
+            )
+            messages.success(request, f"Merci pour votre message {user}!")
+            return redirect(reverse('Nutella:index',))
+        else:
+            form = ContactForm()
+        messages.info(request, 'Une erreur est survenue. Veuillez réessayer!')
+        return render(request, template_name, {'form': form})
 
 
 class ProductView(DetailView):
@@ -67,11 +90,13 @@ class SavedFoodView(LoginRequiredMixin, ListView):
         return Product.objects.filter(users=self.request.user).order_by('pk')
 
 
-class AddToFavoriteView(View):
+class AddToFavoriteView(LoginRequiredMixin, View):
     """
     Creates a relation between an existing product and an
      identified user.
     """
+    
+    login_url = '/login/'
 
     def post(self, request, product_id):
         """
